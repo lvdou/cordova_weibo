@@ -273,8 +273,10 @@ NSString *WEIBO_USER_CANCEL_INSTALL = @"user cancel install weibo";
     if ([self isBase64Data:image]) {
         return [[NSData alloc] initWithBase64EncodedString:image options:0];
     } else if ([image hasPrefix:@"http://"] || [image hasPrefix:@"https://"]) {
-        NSURL *url = [NSURL URLWithString:image];
-        return [NSData dataWithContentsOfURL:url];
+        NSError *error = nil; 
+        NSString *url_str=[NSString stringWithString:[image stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        NSURL *url=[NSURL urlWithString:url_str];
+        NSData* data = [NSURLConnection sendSynchronousRequest:[NSURLRequest requestWithURL:url] returningResponse:NULL error:NULL];
     } else {
         return [NSData dataWithContentsOfFile:image];
     }
